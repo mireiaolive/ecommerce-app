@@ -15,6 +15,10 @@ const ProductDetails = ({ product, products }) => {
     const [index, setIndex] = useState(0);
     const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
 
+    if (!product) {
+        return <div>Producto no encontrado</div>;
+    }
+
     const handleBuyNow = () => {
         onAdd(product, qty);
 
@@ -131,6 +135,12 @@ export const getStaticProps = async ({ params: { slug } }) => {
     const productsQuery = '*[_type=="product"]';
     const product = await client.fetch(query);
     const products = await client.fetch(productsQuery);
+
+    if (!product) {
+        return {
+            notFound: true,
+        };
+    }
 
     return {
         props: { products, product },
